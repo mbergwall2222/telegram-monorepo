@@ -1,0 +1,83 @@
+{
+  "id": "mig_cm5r1lbbg06p0tdtg3q0",
+  "parentID": "mig_cm4rc8jju5la92mjess0",
+  "checksum": "1:bd9938833b77437483bd2bf7a0df7fdcc9bf76bf4058a2a810aa4cd644febad5",
+  "operations": [
+    {
+      "addTable": {
+        "table": "tags_to_users"
+      }
+    },
+    {
+      "addTable": {
+        "table": "tags_to_messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "variant",
+          "type": "string"
+        },
+        "table": "tags"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "order",
+          "type": "int"
+        },
+        "table": "tags"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        "table": "tags_to_users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        "table": "tags_to_users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        "table": "tags_to_messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "message",
+          "type": "link",
+          "link": {
+            "table": "messages"
+          }
+        },
+        "table": "tags_to_messages"
+      }
+    }
+  ]
+}

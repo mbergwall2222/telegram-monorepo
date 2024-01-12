@@ -1,0 +1,16 @@
+{
+  "id": "mig_cm1pkdo7aquugmfff5ug",
+  "parentID": "mig_cm1meeutrlfdef9rkoag",
+  "checksum": "1:5b41932235b2477e61d27e7a9ebd352efad6a3fdc6860928ba7cf56bb4ef3334",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "pfpUrl",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "mig_cm2vvrjbg06p0tdtfdmg",
+  "parentID": "mig_cm26dcu19grg1uka8qc0",
+  "checksum": "1:41becf62687d58675a01e4e4569e1b2a95f4794358af002da3f8f5eeccdba89a",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "lastMessageDate",
+          "type": "datetime"
+        },
+        "table": "chats"
+      }
+    }
+  ]
+}

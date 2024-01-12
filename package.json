@@ -1,0 +1,17 @@
+{
+  "name": "telegram",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "pnpm@8.6.11",
+  "engines": {
+    "node": "18.17.0"
+  }
+}

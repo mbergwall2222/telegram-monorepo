@@ -1,0 +1,12 @@
+{
+  "id": "mig_cm6aqgbju5la92mjfdkg",
+  "parentID": "mig_cm6a9cbbg06p0tdtg8c0",
+  "checksum": "1:ec94b8171df42024b4bcf97b6e66b4dae3df87472b30d23cb3b2196b75411827",
+  "operations": [
+    {
+      "removeTable": {
+        "table": "messageEntities"
+      }
+    }
+  ]
+}

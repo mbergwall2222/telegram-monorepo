@@ -1,0 +1,14 @@
+{
+  "name": "@telegram/types",
+  "main": "src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@telegram/xata": "workspace:*"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

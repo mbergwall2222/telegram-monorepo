@@ -1,0 +1,15 @@
+tasks:
+  format:
+    command: "prettier --check ."
+  lint:
+    command: "eslint --no-error-on-unmatched-pattern ."
+  test:
+    command: "jest --passWithNoTests ."
+  typecheck:
+    command: "tsc --build"
+  serve:
+    command: "bun --watch src/index.ts"
+    env:
+      NODE_ENV: "development"
+  build:
+    command: "bun build --entrypoints ./src/index.ts --outdir ./dist --target bun"

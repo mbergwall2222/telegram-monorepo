@@ -1,0 +1,16 @@
+{
+  "id": "mig_cm1pltutrlfdef9rkps0",
+  "parentID": "mig_cm1pkdo7aquugmfff5ug",
+  "checksum": "1:5415c44160b63caa6a54e03fbd2d541193726d04eee4498552433be3f69f94e5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "pfpUrl",
+          "type": "string"
+        },
+        "table": "chats"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "mig_cm1331989b2om9dr71n0",
+  "checksum": "1:94159abfb71e1a9e2a0d9a3539d78264718cc860a530252c6abcf00eafd977ee",
+  "operations": [
+    {
+      "addTable": {
+        "table": "messages"
+      }
+    }
+  ]
+}

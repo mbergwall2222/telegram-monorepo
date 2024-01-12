@@ -1,0 +1,13 @@
+{
+  "name": "@telegram/logger",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "pino": "^8.17.1"
+  }
+}

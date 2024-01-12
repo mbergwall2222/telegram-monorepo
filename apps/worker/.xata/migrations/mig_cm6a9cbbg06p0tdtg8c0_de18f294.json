@@ -1,0 +1,57 @@
+{
+  "id": "mig_cm6a9cbbg06p0tdtg8c0",
+  "parentID": "mig_cm5r1lbbg06p0tdtg3q0",
+  "checksum": "1:de18f294c52abf7a174877ee66bb0c512304addfe656488bfb739244cc902879",
+  "operations": [
+    {
+      "addTable": {
+        "table": "messageEntities"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "entity",
+          "type": "string"
+        },
+        "table": "messageEntities"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "date",
+          "type": "datetime"
+        },
+        "table": "messageEntities"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "messageId",
+          "type": "string"
+        },
+        "table": "messageEntities"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "chatId",
+          "type": "string"
+        },
+        "table": "messageEntities"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "string"
+        },
+        "table": "messageEntities"
+      }
+    }
+  ]
+}
