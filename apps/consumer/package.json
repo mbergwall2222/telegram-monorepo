@@ -1,0 +1,24 @@
+{
+  "name": "consumer",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "@telegram/gramjs": "workspace:*",
+    "@telegram/xata": "workspace:*",
+    "@telegram/kafka": "workspace:*",
+    "@telegram/logger": "workspace:*",
+    "@telegram/pusher": "workspace:*",
+    "@telegram/redis": "workspace:*",
+    "@telegram/types": "workspace:*",
+    "@telegram/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

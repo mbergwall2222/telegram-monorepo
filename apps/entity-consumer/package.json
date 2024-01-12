@@ -1,0 +1,28 @@
+{
+  "name": "entity-consumer",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "@telegram/gramjs": "workspace:*",
+    "@telegram/kafka": "workspace:*",
+    "@telegram/logger": "workspace:*",
+    "@telegram/pusher": "workspace:*",
+    "@telegram/redis": "workspace:*",
+    "@telegram/types": "workspace:*",
+    "@telegram/utils": "workspace:*",
+    "@telegram/xata": "workspace:*",
+    "async-mutex": "^0.4.0",
+    "natural": "^6.10.4",
+    "stopword": "^2.0.8"
+  },
+  "devDependencies": {
+    "@types/stopword": "^2.0.3",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

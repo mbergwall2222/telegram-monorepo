@@ -1,6 +1,6 @@
 {
   "name": "@telegram/xata",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "devDependencies": {
     "bun-types": "latest"
   },

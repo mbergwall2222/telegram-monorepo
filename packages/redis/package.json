@@ -1,6 +1,6 @@
 {
   "name": "@telegram/redis",
-  "module": "index.ts",
+  "main": "src/index.ts",
   "type": "module",
   "version": "0.0.1",
   "devDependencies": {

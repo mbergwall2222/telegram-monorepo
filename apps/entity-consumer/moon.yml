@@ -1,0 +1,17 @@
+dependsOn:
+  - "xata"
+  - "types"
+  - "kafka"
+  - "logger"
+  - "utils"
+  - "redis"
+tasks:
+  build:
+    command: "bun build --entrypoints ./src/index.ts --outdir ./dist --target node"
+    inputs:
+      - "src/**/*"
+      - "package.json"
+    outputs:
+      - "dist/**/*"
+    deps:
+      - "typecheck"

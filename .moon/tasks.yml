@@ -7,9 +7,33 @@ tasks:
     command: "jest --passWithNoTests ."
   typecheck:
     command: "tsc --build"
+    deps:
+      - "^:typecheck"
   serve:
     command: "bun --watch src/index.ts"
     env:
       NODE_ENV: "development"
   build:
     command: "bun build --entrypoints ./src/index.ts --outdir ./dist --target bun"
+    inputs:
+      - "src/**/*"
+      - "package.json"
+    outputs:
+      - "dist/**/*"
+    deps:
+      - "typecheck"
+      - "^:build"
+  docker-build:
+    command: "sh -c 'docker build -t ghcr.io/mbergwall2222/telegram-$project:latest -t ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD) .'"
+    inputs:
+      - "dist/**/*"
+      - "Dockerfile"
+    deps:
+      - "build"
+  docker-push:
+    command: "sh -c 'docker push ghcr.io/mbergwall2222/telegram-$project:latest && docker push ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD)'"
+    deps:
+      - "docker-build"
+  deploy:
+    deps:
+      - "docker-push"

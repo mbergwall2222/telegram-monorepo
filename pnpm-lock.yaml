@@ -16,6 +16,86 @@ importers:
         specifier: latest
         version: 1.0.22
 
+  apps/consumer:
+    dependencies:
+      '@telegram/gramjs':
+        specifier: workspace:*
+        version: link:../../packages/gramjs
+      '@telegram/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
+      '@telegram/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@telegram/pusher':
+        specifier: workspace:*
+        version: link:../../packages/pusher
+      '@telegram/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
+      '@telegram/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@telegram/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@telegram/xata':
+        specifier: workspace:*
+        version: link:../../packages/xata
+      typescript:
+        specifier: ^5.0.0
+        version: 5.0.2
+    devDependencies:
+      bun-types:
+        specifier: latest
+        version: 1.0.22
+
+  apps/entity-consumer:
+    dependencies:
+      '@telegram/gramjs':
+        specifier: workspace:*
+        version: link:../../packages/gramjs
+      '@telegram/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
+      '@telegram/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@telegram/pusher':
+        specifier: workspace:*
+        version: link:../../packages/pusher
+      '@telegram/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
+      '@telegram/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@telegram/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@telegram/xata':
+        specifier: workspace:*
+        version: link:../../packages/xata
+      async-mutex:
+        specifier: ^0.4.0
+        version: 0.4.0
+      natural:
+        specifier: ^6.10.4
+        version: 6.10.4
+      stopword:
+        specifier: ^2.0.8
+        version: 2.0.8
+      typescript:
+        specifier: ^5.0.0
+        version: 5.0.2
+    devDependencies:
+      '@types/stopword':
+        specifier: ^2.0.3
+        version: 2.0.3
+      bun-types:
+        specifier: latest
+        version: 1.0.22
+
   apps/worker:
     dependencies:
       '@aws-sdk/client-s3':
@@ -353,6 +433,9 @@ importers:
 
   packages/pusher:
     dependencies:
+      pusher:
+        specifier: ^5.2.0
+        version: 5.2.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -3046,7 +3129,6 @@ packages:
 
   /@types/stopword@2.0.3:
     resolution: {integrity: sha512-hioMj0lOvISM+EDevf7ijG8EMbU+J3pj4SstCyfQC1t39uPYpAe7beSfBdU6c1d9jeECTQQtR3UJWtVoUO8Weg==}
-    dev: false
 
   /@types/utf8@3.0.3:
     resolution: {integrity: sha512-+lqLGxWZsEe4Z6OrzBI7Ym4SMUTaMS5yOrHZ0/IL0bpIye1Qbs4PpobJL2mLDbftUXlPFZR7fu6d1yM+bHLX1w==}

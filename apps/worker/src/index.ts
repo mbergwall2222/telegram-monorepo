@@ -6,7 +6,7 @@ import bigInt from "big-integer";
 import { customAlphabet } from "nanoid";
 import { handleMessage } from "./handleMessage";
 import { logger } from "@telegram/logger";
-import { upstashKafka } from "@telegram/kafka";
+import { kafka } from "@telegram/kafka";
 import { stringToShardKey } from "@telegram/utils";
 import PromClient from "prom-client";
 import { Elysia } from "elysia";
@@ -47,7 +47,7 @@ export function uuid(prefix: keyof typeof prefixes): string {
   return [prefixes[prefix], nanoid(16)].join("_");
 }
 
-const p = upstashKafka.producer();
+const producer = kafka.producer();
 
 const apiId = 24600817;
 const apiHash = "78fe78114f5bc72f27769d78bb0c0574";
@@ -90,6 +90,8 @@ const main = async () => {
     connectionRetries: 5,
   });
 
+  await producer.connect();
+
   // client.setLogLevel(LogLevel.DEBUG);
 
   client.addEventHandler(async (event) => {
@@ -112,15 +114,21 @@ const main = async () => {
     }
 
     log.debug("Producing message to Kafka");
-    const partitionNumber = stringToShardKey(chatId);
-    log.debug({ partitionNumber }, "Generated partition number");
+    // const partitionNumber = stringToShardKey(chatId);
+    // log.debug({ partitionNumber }, "Generated partition number");
 
-    const output = await p.produce("messages", newUpdateEvent, {
-      partition: partitionNumber,
+    const output = await producer.send({
+      topic: "messages",
+      messages: [
+        {
+          value: JSON.stringify(newUpdateEvent),
+          // partition: partitionNumber,
+        },
+      ],
     });
 
     log.debug(
-      { output, setMessageId: newUpdateEvent.id, partitionNumber },
+      { output, setMessageId: newUpdateEvent.id },
       "Produced message to Kafka"
     );
     counter.inc();
@@ -144,8 +152,9 @@ const main = async () => {
     },
   });
 
-  lightship.registerShutdownHandler(() => {
-    client.disconnect();
+  lightship.registerShutdownHandler(async () => {
+    await client.disconnect();
+    await producer.disconnect();
   });
   lightship.signalReady();
 

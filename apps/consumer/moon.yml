@@ -1,0 +1,7 @@
+dependsOn:
+  - "xata"
+  - "types"
+  - "kafka"
+  - "logger"
+  - "utils"
+  - "redis"
