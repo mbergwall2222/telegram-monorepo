@@ -1,0 +1,2 @@
+ALTER TABLE "telegram"."chats" ALTER COLUMN "is_group" SET DATA TYPE boolean USING "is_group"::boolean;;--> statement-breakpoint
+ALTER TABLE "telegram"."chats" ALTER COLUMN "is_channel" SET DATA TYPE boolean USING "is_channel"::boolean;;

@@ -1,0 +1,17 @@
+{
+  "name": "@telegram/db",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@types/pg": "^8.10.9",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.12"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "drizzle-orm": "^0.29.3",
+    "pg": "^8.11.3"
+  }
+}

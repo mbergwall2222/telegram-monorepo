@@ -6,14 +6,15 @@
     "start": "bun run src/index.ts"
   },
   "dependencies": {
+    "@telegram/db": "workspace:*",
     "@telegram/gramjs": "workspace:*",
-    "@telegram/xata": "workspace:*",
     "@telegram/kafka": "workspace:*",
     "@telegram/logger": "workspace:*",
     "@telegram/pusher": "workspace:*",
     "@telegram/redis": "workspace:*",
     "@telegram/types": "workspace:*",
-    "@telegram/utils": "workspace:*"
+    "@telegram/utils": "workspace:*",
+    "@telegram/xata": "workspace:*"
   },
   "devDependencies": {
     "bun-types": "latest"

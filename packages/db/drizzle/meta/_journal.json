@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1705099895580,
+      "tag": "0001_nosy_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705102589499,
+      "tag": "0002_fair_firebird",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705102943766,
+      "tag": "0003_foamy_domino",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1705103525210,
+      "tag": "0004_jittery_mercury",
+      "breakpoints": true
+    }
+  ]
+}

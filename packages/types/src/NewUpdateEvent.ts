@@ -6,13 +6,39 @@ import {
   UsersRecord,
 } from "@telegram/xata";
 
-export type NewUpdateEvent = Omit<
-  EditableData<MessagesRecord>,
-  "media" | "entities"
-> & {
-  fromUserFull?: EditableData<UsersRecord>;
-  fromChatFull?: EditableData<ChatsRecord>;
-  media?: Omit<EditableData<DocumentsRecord>, "id">;
+export type NewUpdateEvent = {
+  id: string;
+  date: string;
+  messageId: string;
+  messageText: string;
+  fromUser: string;
+  fromUserFull?: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    pfpUrl?: string;
+    description?: string;
+  };
+  toChat: string;
+  fromChatFull?: {
+    id: string;
+    isGroup: boolean;
+    isChannel: boolean;
+    title?: string;
+    memberCount?: number;
+    pfpUrl?: string;
+    description?: string;
+  };
   mediaId?: string;
-  entities: string;
+  media?: {
+    fileId: string;
+    fileName: string;
+    fileSize?: number;
+    mimeType: string;
+    fileUrl: string;
+  };
+  entities?: object | string;
+  groupId?: string;
+  inReplyToId?: string;
 };

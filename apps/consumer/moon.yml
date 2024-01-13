@@ -5,3 +5,4 @@ dependsOn:
   - "logger"
   - "utils"
   - "redis"
+  - "db"

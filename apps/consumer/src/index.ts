@@ -1,10 +1,3 @@
-import {
-  MessagesRecord,
-  UsersRecord,
-  ChatsRecord,
-  getXataClient,
-  DocumentsRecord,
-} from "@telegram/xata";
 import { NewUpdateEvent } from "@telegram/types";
 import { kafka } from "@telegram/kafka";
 import { logger } from "@telegram/logger";
@@ -15,9 +8,9 @@ import {
   toValidUTF8,
 } from "@telegram/utils";
 import { redis } from "@telegram/redis";
-const consumer = kafka.consumer({ groupId: "worker" });
+import { chats, db, documents, messages, users } from "@telegram/db";
 
-const xata = getXataClient();
+const consumer = kafka.consumer({ groupId: "worker-new" });
 
 const run = async () => {
   // Connect the consumer
@@ -37,15 +30,16 @@ const run = async () => {
       let user;
 
       if (
-        event.fromUserFull &&
-        !(await doesHashMatch(
-          event.fromUserFull.id,
-          event.fromUserFull,
-          "user"
-        ))
+        event.fromUserFull //&&
+        // !(await doesHashMatch(
+        //   event.fromUserFull.id,
+        //   event.fromUserFull,
+        //   "user"
+        // ))
       ) {
         log.debug("Creating or updating user");
-        user = await xata.db.users.createOrUpdate(event.fromUserFull.id, {
+
+        const data = {
           userId: event.fromUserFull.id,
           firstName: toValidUTF8(event.fromUserFull.firstName),
           lastName: toValidUTF8(event.fromUserFull.lastName),
@@ -54,7 +48,17 @@ const run = async () => {
           description: event.fromUserFull.description
             ? toValidUTF8(event.fromUserFull.description)
             : undefined,
-        });
+        };
+
+        user = (
+          await db
+            .insert(users)
+            .values(data)
+            .onConflictDoUpdate({ target: users.userId, set: data })
+            .returning()
+        )[0];
+        // await db.insert(users).values;
+        // user = await db.users.createOrUpdate(event.fromUserFull.id, );
 
         await setHash(event.fromUserFull.id, event.fromUserFull, "user");
       } else {
@@ -79,20 +83,30 @@ const run = async () => {
             Date.parse(event.date as string)
         ) {
           log.debug("Creating or updating chat (newer message)");
-          chat = await xata.db.chats.createOrUpdate(event.fromChatFull.id, {
+          const data = {
+            telegramId: event.fromChatFull.id,
             isGroup: event.fromChatFull.isGroup,
             isChannel: event.fromChatFull.isChannel,
             title: toValidUTF8(event.fromChatFull.title),
             memberCount:
               event.fromChatFull.memberCount !== null
-                ? event.fromChatFull.memberCount
+                ? `${event.fromChatFull.memberCount}`
                 : undefined,
             pfpUrl: event.fromChatFull.pfpUrl,
-            lastMessageDate: event.date,
+            lastMessageDate: new Date(event.date),
             description: event.fromChatFull.description
               ? toValidUTF8(event.fromChatFull.description)
               : undefined,
-          });
+          };
+
+          chat = (
+            await db
+              .insert(chats)
+              .values({ ...data })
+              .onConflictDoUpdate({ target: chats.telegramId, set: data })
+              .returning()
+          )[0];
+
           await redis.set(
             `chat:${event.fromChatFull.id}:lastMessageDate`,
             event.date as string
@@ -116,13 +130,19 @@ const run = async () => {
       let document;
       if (event.media) {
         log.debug("Creating media");
-        document = await xata.db.documents.create({
-          fileId: event.media.fileId,
-          fileName: event.media.fileName,
-          fileSize: event.media.fileSize,
-          mimeType: event.media.mimeType,
-          fileUrl: event.media.fileUrl,
-        });
+        document = (
+          await db
+            .insert(documents)
+            .values({
+              fileId: event.media.fileId,
+              fileName: event.media.fileName,
+              fileSize: `${event.media.fileSize}`,
+              mimeType: event.media.mimeType,
+              fileUrl: event.media.fileUrl,
+            })
+            .returning()
+        )[0];
+
         mediaId = document.id;
         await redis.set(`file:${event.media.fileId}`, document.id);
       } else if (mediaId) {
@@ -132,13 +152,13 @@ const run = async () => {
       if (typeof event.entities == "object")
         event.entities = JSON.stringify(event.entities);
 
-      const createdMessage = await xata.db.messages.createOrUpdate(event.id, {
-        date: event.date,
+      const createdMessage = await db.insert(messages).values({
+        date: new Date(event.date),
         messageId: ensureString(event.messageId),
         messageText: toValidUTF8(event.messageText),
-        fromUser: user?.id,
-        toChat: chat?.id,
-        media: mediaId,
+        userId: user?.id,
+        chatId: chat?.id as string,
+        documentId: mediaId,
         groupId: event.groupId,
         inReplyToId: event.inReplyToId,
         entities: event.entities,
