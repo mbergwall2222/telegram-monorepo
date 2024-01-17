@@ -113,6 +113,9 @@ importers:
       '@telegram/confluent-schema-registry':
         specifier: workspace:*
         version: link:../../packages/confluent-schema-registry
+      '@telegram/env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@telegram/kafka':
         specifier: workspace:*
         version: link:../../packages/kafka

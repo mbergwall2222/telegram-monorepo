@@ -11,7 +11,7 @@ import { redis } from "@telegram/redis";
 import { chats, db, documents, messages, users } from "@telegram/db";
 import { env } from "@telegram/env";
 
-const consumer = kafka.consumer({ groupId: "worker-new" });
+const consumer = kafka.consumer({ groupId: env.KAFKA_CONSUMER_GROUP_ID });
 
 const run = async () => {
   // Connect the consumer
@@ -34,12 +34,12 @@ const run = async () => {
       let user;
 
       if (
-        event.fromUserFull //&&
-        // !(await doesHashMatch(
-        //   event.fromUserFull.id,
-        //   event.fromUserFull,
-        //   "user"
-        // ))
+        event.fromUserFull &&
+        !(await doesHashMatch(
+          event.fromUserFull.id,
+          event.fromUserFull,
+          "user"
+        ))
       ) {
         log.debug("Creating or updating user");
 
@@ -77,15 +77,14 @@ const run = async () => {
       let chat;
 
       if (event.fromChatFull) {
-        // const chatLastMessageDate = await redis.get(
-        //   `chat:${event.fromChatFull.id}:lastMessageDate`
-        // );
+        const chatLastMessageDate = await redis.get(
+          `chat:${event.fromChatFull.id}:lastMessageDate`
+        );
 
         if (
-          // !chatLastMessageDate ||
-          // Date.parse(chatLastMessageDate as string) <
-          //   Date.parse(event.date as string)
-          true
+          !chatLastMessageDate ||
+          Date.parse(chatLastMessageDate as string) <
+            Date.parse(event.date as string)
         ) {
           log.debug("Creating or updating chat (newer message)");
           const data = {
@@ -149,7 +148,7 @@ const run = async () => {
         )[0];
 
         mediaId = document.id;
-        // await redis.set(`file:${event.media.fileId}`, document.id);
+        await redis.set(`file:${event.media.fileId}`, document.id);
       } else if (mediaId) {
         log.debug("Media already exists");
       }

@@ -7,6 +7,8 @@ import { KafkaMessage } from "kafkajs";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import crypto from "crypto";
 import { CohereClient } from "cohere-ai";
+import { env } from "@telegram/env";
+
 const key = "Bl70tSVXSOY9kJqpZs5mRYN4AZHJ7kHao9lOBvF5";
 
 const cohere = new CohereClient({
@@ -85,6 +87,7 @@ const processBatch = async () => {
         in_reply_to_id,
         group_id,
         message_id,
+        message_text,
         date,
         id: realId,
       } = decodedValue;
@@ -99,6 +102,7 @@ const processBatch = async () => {
           in_reply_to_id,
           group_id,
           message_id,
+          message_text,
           date,
           id: realId,
         },
@@ -112,7 +116,7 @@ const processBatch = async () => {
     }
   });
 
-  await client.upsert("messages", { wait: false, points });
+  await client.upsert(env.QDRANT_COLLECTIONS_NAME, { wait: false, points });
 };
 
 // If the batch size does not reach the expected size in 10s, will process the batch after 10s
@@ -127,7 +131,7 @@ const run = async () => {
   // Connect the consumer
   await consumer.connect();
   await consumer.subscribe({
-    topic: "data.telegram.messages",
+    topic: env.KAFKA_DATA_TOPIC,
     fromBeginning: true,
   });
 

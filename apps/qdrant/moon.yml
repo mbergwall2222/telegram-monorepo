@@ -1,6 +1,7 @@
 dependsOn:
   # - "types"
   - "kafka"
+  - "env"
   # - "logger"
   # - "db"
   # - "confluent-schema-registry"

@@ -1,2 +1,5 @@
 dependsOn:
   - "env"
+tasks:
+  migrate:
+    command: "bun run src/migrate.ts"

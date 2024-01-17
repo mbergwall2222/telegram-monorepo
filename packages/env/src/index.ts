@@ -16,7 +16,10 @@ let envSchema = z.object({
   TELEGRAM_API_ID: z.coerce.number().min(1),
   TELEGRAM_APP_HASH: z.string().min(1),
   KAFKA_MESSAGES_TOPIC: z.string().min(1),
+  KAFKA_DATA_TOPIC: z.string().min(1),
   DB_CONNECTION_STRING: z.string().min(1),
+  KAFKA_CONSUMER_GROUP_ID: z.string().min(1),
+  QDRANT_COLLECTIONS_NAME: z.string().min(1),
 });
 
 let _env: z.infer<typeof envSchema>;
