@@ -3800,7 +3800,9 @@ var envSchema = z.object({
   REDIS_URL: z.string().min(1),
   REDIS_DB: z.coerce.number().default(0),
   TELEGRAM_API_ID: z.coerce.number().min(1),
-  TELEGRAM_APP_HASH: z.string().min(1)
+  TELEGRAM_APP_HASH: z.string().min(1),
+  KAFKA_MESSAGES_TOPIC: z.string().min(1),
+  DB_CONNECTION_STRING: z.string().min(1)
 });
 var _env;
 try {

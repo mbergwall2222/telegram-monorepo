@@ -379,7 +379,7 @@ export const handleMessage = async (
     date,
     messageId,
     messageText,
-    fromUser: fromId,
+    // fromUser: fromId,
     fromUserFull,
     toChat: id,
     fromChatFull,
