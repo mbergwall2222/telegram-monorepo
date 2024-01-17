@@ -10,6 +10,7 @@
     "@cryptography/aes": "^0.1.1",
     "@remusao/smaz": "^1.9.1",
     "@telegram/gramjs": "workspace:*",
+    "@telegram/env": "workspace:*",
     "@telegram/kafka": "workspace:*",
     "@telegram/logger": "workspace:*",
     "@telegram/pusher": "workspace:*",

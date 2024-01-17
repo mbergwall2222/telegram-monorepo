@@ -1,0 +1,9 @@
+tasks:
+  docker-build:
+    command: "sh -c 'docker build -t ghcr.io/mbergwall2222/telegram-$project:latest -t ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD) .'"
+    inputs:
+      - "Dockerfile"
+  docker-push:
+    command: "sh -c 'docker push ghcr.io/mbergwall2222/telegram-$project:latest && docker push ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD)'"
+    deps:
+      - "docker-build"

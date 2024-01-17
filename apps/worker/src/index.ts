@@ -1,3 +1,5 @@
+import { env } from "@telegram/env";
+
 import { TelegramClient, sessions, events, utils } from "@telegram/gramjs";
 
 //@ts-ignore
@@ -7,10 +9,10 @@ import { customAlphabet } from "nanoid";
 import { handleMessage } from "./handleMessage";
 import { logger } from "@telegram/logger";
 import { kafka } from "@telegram/kafka";
-import { stringToShardKey } from "@telegram/utils";
 import PromClient from "prom-client";
 import { Elysia } from "elysia";
 import { ConfigurationInput, Lightship, createLightship } from "lightship";
+import { redis } from "@telegram/redis";
 
 const counter = new PromClient.Counter({
   name: "worker_messages_processed_total",
@@ -49,15 +51,15 @@ export function uuid(prefix: keyof typeof prefixes): string {
 
 const producer = kafka.producer();
 
-const apiId = 24600817;
-const apiHash = "78fe78114f5bc72f27769d78bb0c0574";
+const apiId = env.TELEGRAM_API_ID;
+const apiHash = env.TELEGRAM_APP_HASH;
 // const session = new StoreSession(Bun.env.SESSION as string);
-const session = new RedisSession(Bun.env.SESSION as string);
+const session = new RedisSession(env.SESSION);
 // const session = new MemorySession();
 
 await session.load();
 
-console.log(session.authKey);
+// console.log(await redis.info());
 export function convertToJSON(obj: any) {
   const result: any = {};
 
@@ -118,7 +120,7 @@ const main = async () => {
     // log.debug({ partitionNumber }, "Generated partition number");
 
     const output = await producer.send({
-      topic: "messages",
+      topic: env.KAFKA_MESSAGES_TOPIC,
       messages: [
         {
           value: JSON.stringify(newUpdateEvent),

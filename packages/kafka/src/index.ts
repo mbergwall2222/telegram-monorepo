@@ -1,4 +1,5 @@
 import { Kafka, logLevel } from "kafkajs";
+import { SchemaRegistry } from "@kafkajs/confluent-schema-registry";
 
 export const kafka = new Kafka({
   clientId: "my-app",
@@ -10,6 +11,7 @@ export const kafka = new Kafka({
   ssl: {
     rejectUnauthorized: false,
   },
+  connectionTimeout: 10000,
   // sasl: {
   //   mechanism: "scram-sha-256", // Replace with your SASL mechanism
   //   username: "bWFnbmV0aWMtbGl6YXJkLTkwMDUkuns1jdFHEyVWa5oEmNwcTUi3mFOFIGdP03Y", // Replace username

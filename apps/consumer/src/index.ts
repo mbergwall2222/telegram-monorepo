@@ -9,13 +9,17 @@ import {
 } from "@telegram/utils";
 import { redis } from "@telegram/redis";
 import { chats, db, documents, messages, users } from "@telegram/db";
+import { env } from "@telegram/env";
 
 const consumer = kafka.consumer({ groupId: "worker-new" });
 
 const run = async () => {
   // Connect the consumer
   await consumer.connect();
-  await consumer.subscribe({ topic: "messages", fromBeginning: false });
+  await consumer.subscribe({
+    topic: env.KAFKA_MESSAGES_TOPIC,
+    fromBeginning: false,
+  });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -73,14 +77,15 @@ const run = async () => {
       let chat;
 
       if (event.fromChatFull) {
-        const chatLastMessageDate = await redis.get(
-          `chat:${event.fromChatFull.id}:lastMessageDate`
-        );
+        // const chatLastMessageDate = await redis.get(
+        //   `chat:${event.fromChatFull.id}:lastMessageDate`
+        // );
 
         if (
-          !chatLastMessageDate ||
-          Date.parse(chatLastMessageDate as string) <
-            Date.parse(event.date as string)
+          // !chatLastMessageDate ||
+          // Date.parse(chatLastMessageDate as string) <
+          //   Date.parse(event.date as string)
+          true
         ) {
           log.debug("Creating or updating chat (newer message)");
           const data = {
@@ -121,12 +126,12 @@ const run = async () => {
         log.debug("Chat already exists");
       }
 
-      if (!chat)
-        chat = event.fromChatFull?.id
-          ? { id: event.fromChatFull?.id }
-          : undefined;
+      // if (!chat)
+      //   chat = event.fromChatFull?.id
+      //     ? { id: event.fromChatFull?.id }
+      //     : undefined;
 
-      let mediaId = event.mediaId;
+      let mediaId;
       let document;
       if (event.media) {
         log.debug("Creating media");
@@ -144,7 +149,7 @@ const run = async () => {
         )[0];
 
         mediaId = document.id;
-        await redis.set(`file:${event.media.fileId}`, document.id);
+        // await redis.set(`file:${event.media.fileId}`, document.id);
       } else if (mediaId) {
         log.debug("Media already exists");
       }
@@ -152,17 +157,20 @@ const run = async () => {
       if (typeof event.entities == "object")
         event.entities = JSON.stringify(event.entities);
 
-      const createdMessage = await db.insert(messages).values({
-        date: new Date(event.date),
-        messageId: ensureString(event.messageId),
-        messageText: toValidUTF8(event.messageText),
-        userId: user?.id,
-        chatId: chat?.id as string,
-        documentId: mediaId,
-        groupId: event.groupId,
-        inReplyToId: event.inReplyToId,
-        entities: event.entities,
-      });
+      const createdMessage = await db
+        .insert(messages)
+        .values({
+          date: new Date(event.date),
+          messageId: ensureString(event.messageId),
+          messageText: toValidUTF8(event.messageText),
+          userId: user?.id,
+          chatId: chat?.id as string,
+          documentId: mediaId,
+          groupId: event.groupId,
+          inReplyToId: event.inReplyToId,
+          entities: event.entities,
+        })
+        .onConflictDoNothing();
 
       // await pusher.trigger("chats", "new_message", {
       //   chatId: event?.fromChatFull?.id,

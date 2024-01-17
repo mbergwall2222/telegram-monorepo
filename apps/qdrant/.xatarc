@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Matthew-Bergwall-s-workspace-8jps3o.us-east-1.xata.sh/db/telegram",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}

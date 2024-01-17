@@ -10,6 +10,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@telegram/env": "workspace:*",
     "redis": "^4.6.12"
   }
 }

@@ -11,7 +11,7 @@ export type NewUpdateEvent = {
   date: string;
   messageId: string;
   messageText: string;
-  fromUser: string;
+  fromUser?: string;
   fromUserFull?: {
     id: string;
     firstName?: string;

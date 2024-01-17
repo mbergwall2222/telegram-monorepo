@@ -6,3 +6,4 @@ dependsOn:
   - "utils"
   - "redis"
   - "db"
+  - "env"

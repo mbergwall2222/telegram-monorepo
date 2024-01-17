@@ -1,5 +1,6 @@
 import { createClient } from "redis";
+import { env } from "@telegram/env";
 
 export const redisBase = createClient({
-  url: "redis://dragonfly.redis.svc.cluster.local:6379",
+  url: env.REDIS_URL,
 });

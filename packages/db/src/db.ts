@@ -2,10 +2,10 @@ import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
+import { env } from "@telegram/env";
 
 export const pool = new Pool({
-  connectionString:
-    "postgresql://winnpg:8bWv0%28%3FuasY4.r%3Ff1-eV9gM7@100.116.166.118:5432/pgwinn",
+  connectionString: env.DB_CONNECTION_STRING,
   ssl: {
     rejectUnauthorized: false,
   },

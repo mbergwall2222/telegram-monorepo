@@ -208,6 +208,7 @@ export const handleMessage = async (
 
       fromChatFull = {
         id: peerId,
+        isGroup: true,
         isChannel: false,
         title: peer.title,
         memberCount: peer.participantsCount,

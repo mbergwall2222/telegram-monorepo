@@ -1,3 +1,4 @@
+import { env } from '@telegram/env';
 import type { Config } from 'drizzle-kit';
 export default {
   schema: './src/schema.ts',
@@ -5,5 +6,5 @@ export default {
   driver: 'pg', // 'pg' | 'mysql2' | 'better-sqlite' | 'libsql' | 'turso'
   
   dbCredentials: {connectionString:
-    "postgresql://winnpg:8bWv0%28%3FuasY4.r%3Ff1-eV9gM7@100.116.166.118:5432/pgwinn"}
+    env.DB_CONNECTION_STRING}
 } satisfies Config;
