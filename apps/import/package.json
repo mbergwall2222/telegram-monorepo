@@ -8,7 +8,8 @@
   "dependencies": {
     "@telegram/env": "workspace:*",
     "@telegram/kafka": "workspace:*",
-    "@telegram/types": "workspace:*"
+    "@telegram/types": "workspace:*",
+    "@telegram/xata": "workspace:*"
   },
   "devDependencies": {
     "bun-types": "latest"

@@ -113,6 +113,9 @@ importers:
       '@telegram/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@telegram/xata':
+        specifier: workspace:*
+        version: link:../../packages/xata
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
