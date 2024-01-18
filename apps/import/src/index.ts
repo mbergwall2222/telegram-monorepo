@@ -23,7 +23,7 @@ const chat: NewUpdateEvent["fromChatFull"] = {
 
 };
 
-_results.messages.slice(0).forEach((result: any) => {
+_results.messages.slice(0,1).forEach((result: any) => {
   if(result.type != "message") return;
   let text;
 

@@ -29,15 +29,14 @@ const run = async () => {
   // Connect the consumer
   console.log("Connecting to Kafka")
   await consumer.connect();
-  await consumer.subscribe({
-    topic: "messages",
-    fromBeginning: false,
-  });
-
-  await consumer.subscribe({
-    topic: "messages-new",
-    fromBeginning: false,
-  });
+  const topics = env.KAFKA_MESSAGES_TOPIC.split(",")
+  console.log("Subscribing to topics " + topics.join(", "))
+  for(const topic of topics) {
+    await consumer.subscribe({
+      topic,
+      fromBeginning: false,
+    });
+  }
 
   console.log("Running...")
   await consumer.run({eachBatchAutoResolve: true,

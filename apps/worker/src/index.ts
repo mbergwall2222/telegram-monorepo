@@ -85,6 +85,8 @@ export function convertToJSON(obj: any) {
   return result;
 }
 
+const topic = env.KAFKA_MESSAGES_TOPIC.split(",")[0];
+
 const main = async () => {
   logger.debug("Starting Telegram Client");
 
@@ -120,7 +122,7 @@ const main = async () => {
     // log.debug({ partitionNumber }, "Generated partition number");
 
     const output = await producer.send({
-      topic: env.KAFKA_MESSAGES_TOPIC,
+      topic,
       messages: [
         {
           value: JSON.stringify(newUpdateEvent),
