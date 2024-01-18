@@ -76,6 +76,7 @@ const processBatch = async () => {
     currBatch.map(async (message) => {
       if (!message.value) return;
       const decodedValue = await registry.decode(message.value);
+      if (!decodedValue?.message_text?.length) return;
       const vector = await query(decodedValue.message_text);
       const id = getUuid(decodedValue.id);
       const {
@@ -125,9 +126,10 @@ const scheduleBatchProcessing = () => {
   timer = setTimeout(processBatch, 10000); // 10 seconds
 };
 
-const consumer = kafka.consumer({ groupId: "qdrant-worker" });
+const consumer = kafka.consumer({ groupId: `qdrant-${env.KAFKA_DATA_TOPIC}` });
 
 const run = async () => {
+  // return;
   // Connect the consumer
   await consumer.connect();
   await consumer.subscribe({

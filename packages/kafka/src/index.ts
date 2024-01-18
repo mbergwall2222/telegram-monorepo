@@ -11,7 +11,7 @@ export const kafka = new Kafka({
   ssl: {
     rejectUnauthorized: false,
   },
-  connectionTimeout: 10000,
+  connectionTimeout: 30000,
   // sasl: {
   //   mechanism: "scram-sha-256", // Replace with your SASL mechanism
   //   username: "bWFnbmV0aWMtbGl6YXJkLTkwMDUkuns1jdFHEyVWa5oEmNwcTUi3mFOFIGdP03Y", // Replace username
