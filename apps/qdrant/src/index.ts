@@ -135,7 +135,7 @@ function chunkArray<T>(array: T[], chunkSize: number): T[][] {
   return result;
 }
 
-const consumer = kafka.consumer({ groupId: `qdrant-${env.KAFKA_DATA_TOPIC}` });
+const consumer = kafka.consumer({ groupId: `qdrant-${env.KAFKA_DATA_TOPIC}`,  });
 
 const run = async () => {
   // return;
@@ -162,53 +162,65 @@ const run = async () => {
     }) => {
       console.log(`Received batch of size ${batch.messages.length}`);
       const messages = await Promise.all(batch.messages.filter(message => message.value != null).map(message => registry.decode(message.value as Buffer)));
-      const chunkedMessages = chunkArray(messages, 50);
+      const chunkedMessages = chunkArray(messages.filter(message => message?.message_text?.length), 90);
 
       let totalMessagesSent = 0;
-
       let i = 0;
-      for(const chunk of chunkedMessages) {
-        console.log(`Chunk ${++i} of ${chunkedMessages.length}`);
-        const chunkMessages = chunk.filter(message => message.message_text?.length);
 
-        const vectors = await query(chunkMessages.map(message => message.message_text));
-        const points = chunkMessages.map((message, index) => {
-          const id = getUuid(message.id);
-          const {
-            document_id,
-            user_id,
-            chat_id,
-            created_at,
-            entities,
-            in_reply_to_id,
-            group_id,
-            message_id,
-            message_text,
-            date,
-            id: realId,
-          } = message;
-          return {
-            id,
-            vector: vectors[index],
-            payload: {
+      const pointsNested = await Promise.all(chunkedMessages.map(async( chunk) => {
+        try {
+          const chunkMessages = chunk.filter(message => message.message_text?.length);
+          if(!chunkMessages.length) return [];
+          const vectors = await query(chunkMessages.map(message => message.message_text));
+          const points = chunkMessages.map((message, index) => {
+            const id = getUuid(message.id);
+            const {
               document_id,
               user_id,
               chat_id,
               created_at,
+              entities,
               in_reply_to_id,
               group_id,
               message_id,
               message_text,
               date,
               id: realId,
-            },
-          };
-        });
-        
+            } = message;
+            return {
+              id,
+              vector: vectors[index],
+              payload: {
+                document_id,
+                user_id,
+                chat_id,
+                created_at,
+                in_reply_to_id,
+                group_id,
+                message_id,
+                message_text,
+                date,
+                id: realId,
+              },
+            };
+          })
+            
+            totalMessagesSent += chunkMessages.length;
+            console.log(`Prepared ${chunkMessages.length} messages to qdrant`);
+            await heartbeat();
+            return points;
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      }))
+     
+      const points = pointsNested.flat();
+
+
+      if(points.length) {
         await client.upsert(env.QDRANT_COLLECTIONS_NAME, { wait: false, points });
-        totalMessagesSent += chunkMessages.length;
-        console.log(`Sent ${chunkMessages.length} messages to qdrant`);
-        await heartbeat();
+        console.log(`Sent ${points.length} messages to qdrant`);
       }
      
     }});
