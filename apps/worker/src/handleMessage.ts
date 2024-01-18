@@ -293,11 +293,11 @@ export const handleMessage = async (
       let extension = "jpg";
       let fileId = message.media.photo?.id.toString();
 
-      const cachedFileId = await getFileId(fileId);
-      if (cachedFileId) {
-        mediaId = cachedFileId;
-        log.debug("Photo already exists in cache");
-      } else {
+      // const cachedFileId = await getFileId(fileId);
+      // if (cachedFileId) {
+      //   mediaId = cachedFileId;
+      //   log.debug("Photo already exists in cache");
+      // } else {
         const buffer = await message.downloadMedia();
         const fileName = `${fromId}/${uuid("img")}.${extension}`;
         const command = new PutObjectCommand({
@@ -317,18 +317,18 @@ export const handleMessage = async (
         };
         // console.log(command);
         log.debug({ fileName }, `Successfully uploaded photo`);
-      }
+      //}
     } else if (message.media.className == "MessageMediaDocument") {
       log.debug("Message has document media");
       const document = message.media.document;
 
       if (document?.className == "Document") {
         let fileId = document?.id.toString();
-        const cachedFileId = await getFileId(fileId);
-        if (cachedFileId) {
-          mediaId = cachedFileId;
-          log.debug("Document already exists in cache");
-        } else {
+        // const cachedFileId = await getFileId(fileId);
+        // if (cachedFileId) {
+        //   mediaId = cachedFileId;
+        //   log.debug("Document already exists in cache");
+        // } else {
           const attributes = document.attributes;
           const extension = mime.extension(document.mimeType);
 
@@ -362,7 +362,7 @@ export const handleMessage = async (
           log.debug({ fileName }, `Successfully uploaded document`);
 
           // console.log(`Successfully uploaded file: ${fileName}`);
-        }
+        // }
       }
     }
   }

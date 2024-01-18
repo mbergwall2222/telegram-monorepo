@@ -30,7 +30,12 @@ const run = async () => {
   console.log("Connecting to Kafka")
   await consumer.connect();
   await consumer.subscribe({
-    topic: env.KAFKA_MESSAGES_TOPIC,
+    topic: "messages",
+    fromBeginning: false,
+  });
+
+  await consumer.subscribe({
+    topic: "messages-new",
     fromBeginning: false,
   });
 

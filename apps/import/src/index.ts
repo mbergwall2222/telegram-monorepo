@@ -11,18 +11,19 @@ await producer.connect();
 
 console.log("Connected to kafka");
 
+const _results = results as any;
 
-const chatId = "1745069775";
+const chatId = `${_results.id}`;
 const chat: NewUpdateEvent["fromChatFull"] = {
   id: chatId,
   isGroup: true,
   isChannel: true,
-  title: "Club Dinero $$$",
-  pfpUrl: "https://telegram-media.nyc3.cdn.digitaloceanspaces.com/1745069775/img_4pugZpQP2E6iRNab.jpg",
+  title: _results.name,
+  // pfpUrl: null,
 
 };
 
-(results as any).messages.slice(150000).forEach((result: any) => {
+_results.messages.slice(0).forEach((result: any) => {
   if(result.type != "message") return;
   let text;
 
@@ -41,7 +42,7 @@ const chat: NewUpdateEvent["fromChatFull"] = {
     date: date.toISOString(),
     messageId: `${result.id}`,
     messageText: text,
-    fromUser: result.from_id,
+    fromUser: result.from_id.replace("user", ""),
     toChat: chatId,
     fromUserFull: !!result.from_id ? {
       id: result.from_id?.replace("user", ""),

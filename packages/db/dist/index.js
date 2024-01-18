@@ -12682,6 +12682,10 @@ var pool = new import_pg3.Pool({
   }
 });
 var db3 = drizzle(pool, { schema: exports_schema });
+// src/index.ts
+function keysFromObject(object) {
+  return Object.keys(object);
+}
 export {
   usersRelations,
   users,
@@ -12694,10 +12698,12 @@ export {
   tagsToChats,
   tagsRelations,
   tags,
+  sql2 as sql,
   savedFilters,
   pool,
   messagesRelations,
   messages,
+  keysFromObject,
   documents,
   db3 as db,
   chatsRelations,
