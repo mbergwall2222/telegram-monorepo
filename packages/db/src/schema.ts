@@ -3,6 +3,7 @@ import {
   index,
   integer,
   json,
+  pgMaterializedView,
   pgSchema,
   primaryKey,
   text,
@@ -51,13 +52,18 @@ export const chats = telegramSchema.table(
     title: text("title"),
     memberCount: text("member_count"),
     pfpUrl: text("pfp_url"),
-    lastMessageDate: timestamp("last_message_date"),
+    lastMessageDate: timestamp("last_message_date")
+      .notNull()
+      .$defaultFn(() => new Date()),
     description: text("description"),
     createdAt: timestamp("created_at").$defaultFn(() => new Date()),
   },
   (table) => {
     return {
       idIdx: uniqueIndex("chats_id_idx").on(table.telegramId),
+      lastMessageDateIdx: index("chats_last_message_date_idx").on(
+        table.lastMessageDate
+      ),
     };
   }
 );
@@ -91,7 +97,11 @@ export const messages = telegramSchema.table(
       globalDateIdx: index("messages_global_date_idx").on(table.date),
       chatIdx: index("messages_chat_idx").on(table.chatId, table.date),
       userIdx: index("messages_user_idx").on(table.userId, table.date),
-
+      replyIdx: index("messages_reply_idx").on(
+        table.chatId,
+        table.inReplyToId,
+        table.date
+      ),
       idIdx: uniqueIndex("messages_id_idx").on(table.chatId, table.messageId),
     };
   }
@@ -133,7 +143,9 @@ export const tags = telegramSchema.table("tags", {
   name: text("name").notNull(),
   description: text("description"),
   variant: text("variant"),
-  order: integer("order").$default(() => 0),
+  order: integer("order")
+    .notNull()
+    .$default(() => 0),
   createdAt: timestamp("created_at").$defaultFn(() => new Date()),
 });
 
@@ -148,13 +160,14 @@ export const tagsToMessages = telegramSchema.table(
   {
     tagId: text("tag_id")
       .notNull()
-      .references(() => tags.id),
+      .references(() => tags.id, { onDelete: "cascade" }),
     messageId: text("message_id")
       .notNull()
-      .references(() => messages.id),
+      .references(() => messages.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.tagId, t.messageId] }),
+    tagsToMessageIdx: index("tags_to_messages_idx").on(t.messageId),
   })
 );
 
@@ -174,13 +187,14 @@ export const tagsToUsers = telegramSchema.table(
   {
     tagId: text("tag_id")
       .notNull()
-      .references(() => tags.id),
+      .references(() => tags.id, { onDelete: "cascade" }),
     userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.tagId, t.userId] }),
+    tagsToUserIdx: index("tags_to_users_idx").on(t.userId),
   })
 );
 
@@ -200,13 +214,14 @@ export const tagsToChats = telegramSchema.table(
   {
     tagId: text("tag_id")
       .notNull()
-      .references(() => tags.id),
+      .references(() => tags.id, { onDelete: "cascade" }),
     chatId: text("chat_id")
       .notNull()
-      .references(() => chats.id),
+      .references(() => chats.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.tagId, t.chatId] }),
+    tagsToChatIdx: index("tags_to_chats_idx").on(t.chatId),
   })
 );
 
@@ -232,3 +247,12 @@ export const savedFilters = telegramSchema.table("saved_filters", {
   orgId: text("org_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(() => new Date()),
 });
+
+export const userSummary = telegramSchema
+  .view("user_summary", {
+    id: text("id").primaryKey(),
+    chatsList: json("chatslist").$type<{ id: string; title: string }[]>(),
+    chatCount: integer("chatcount"),
+    messageCount: integer("messagecount"),
+  })
+  .existing();
