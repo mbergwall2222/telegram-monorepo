@@ -1,14 +1,15 @@
 {
   "name": "telegram",
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "prettier": "3.2.4"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.6.11",
   "engines": {

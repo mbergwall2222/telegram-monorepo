@@ -1,4 +1,4 @@
-import { Kafka, logLevel } from "kafkajs";
+import { Kafka, logLevel } from "@telegram/kafkajs";
 import { SchemaRegistry } from "@kafkajs/confluent-schema-registry";
 
 export const kafka = new Kafka({

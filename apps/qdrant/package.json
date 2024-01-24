@@ -9,6 +9,7 @@
     "@kafkajs/confluent-schema-registry": "^3.3.0",
     "@qdrant/js-client-rest": "^1.7.0",
     "@telegram/confluent-schema-registry": "workspace:*",
+    "@telegram/kafkajs": "workspace:*",
     "@telegram/env": "workspace:*",
     "@telegram/kafka": "workspace:*",
     "cohere-ai": "^7.6.2",
@@ -26,6 +27,6 @@
     "bun-types": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   }
 }

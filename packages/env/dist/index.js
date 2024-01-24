@@ -3809,10 +3809,16 @@ var envSchema = z.object({
 });
 var _env;
 try {
-  _env = envSchema.parse(Bun.env);
+  let env = typeof Bun == "undefined" ? process.env : Bun.env;
+  _env = envSchema.parse(env);
 } catch (err) {
-  const validationError = fromZodError(err);
-  console.error(`[env] ${validationError.toString()}`);
+  console.log(err);
+  if (err instanceof ZodError) {
+    const validationError = fromZodError(err);
+    console.error(`[env] ${validationError.toString()}`);
+  } else {
+    console.error(`[env] ${err}`);
+  }
   process.exit(1);
 }
 var env = _env;

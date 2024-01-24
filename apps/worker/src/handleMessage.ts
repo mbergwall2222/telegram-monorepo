@@ -125,6 +125,7 @@ export const handleMessage = async (
           pfpUrl = `${cdnEndpoint}${fileName}`;
         } else {
           log.debug("Pfp already exists in cache");
+          pfpUrl = `${cdnEndpoint}${photoExists}`;
         }
       }
       let description;
@@ -192,6 +193,7 @@ export const handleMessage = async (
           chatPfpUrl = `${cdnEndpoint}${fileName}`;
         } else {
           log.debug("Pfp already exists in cache");
+          chatPfpUrl = `${cdnEndpoint}${photoExists}`;
         }
       }
 
@@ -241,6 +243,7 @@ export const handleMessage = async (
           log.debug({ fileName }, `Successfully uploaded channel pfp`);
           chatPfpUrl = `${cdnEndpoint}${fileName}`;
         } else {
+          chatPfpUrl = `${cdnEndpoint}${photoExists}`;
           log.debug("Pfp already exists in cache");
         }
       }
