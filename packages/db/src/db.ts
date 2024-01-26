@@ -6,7 +6,7 @@ import { env } from "@telegram/env";
 
 declare global {
   var pool: Pool;
-  var db: NodePgDatabase<typeof schema>;
+  // var db: NodePgDatabase<typeof schema>;
 }
 
 if (!globalThis.pool) {
@@ -27,11 +27,6 @@ if (!globalThis.pool) {
 
 export const pool = globalThis.pool;
 
-if (!globalThis.db) {
-  console.log("Creating db");
-  globalThis.db = drizzle(pool, { schema });
-}
-
 globalThis.pool = pool;
 
-export const db = globalThis.db;
+export const db = drizzle(pool, { schema });
