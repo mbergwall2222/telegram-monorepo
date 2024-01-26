@@ -27,6 +27,7 @@ export const users = telegramSchema.table(
     pfpUrl: text("pfp_url"),
     description: text("description"),
     createdAt: timestamp("created_at").$defaultFn(() => new Date()),
+    workspaceIds: text("workspace_ids").array().notNull().default([]),
   },
   (table) => {
     return {
@@ -57,6 +58,7 @@ export const chats = telegramSchema.table(
       .$defaultFn(() => new Date()),
     description: text("description"),
     createdAt: timestamp("created_at").$defaultFn(() => new Date()),
+    workspaceIds: text("workspace_ids").array().notNull().default([]),
   },
   (table) => {
     return {
@@ -91,6 +93,7 @@ export const messages = telegramSchema.table(
       .references(() => chats.id),
     userId: text("user_id").references(() => users.id),
     documentId: text("document_id").references(() => documents.id),
+    workspaceIds: text("workspace_ids").array().notNull().default([]),
   },
   (table) => {
     return {
@@ -247,6 +250,113 @@ export const savedFilters = telegramSchema.table("saved_filters", {
   orgId: text("org_id").notNull(),
   createdAt: timestamp("created_at").$defaultFn(() => new Date()),
 });
+
+export const workspaces = telegramSchema.table("workspaces", {
+  id: text("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  userId: text("user_id").notNull(),
+  orgId: text("org_id").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(() => new Date()),
+});
+
+export const workspacesRelations = relations(workspaces, ({ many }) => ({
+  messages: many(workspacesToMessages),
+  users: many(workspacesToUsers),
+  chats: many(workspacesToChats),
+}));
+
+export const workspacesToMessages = telegramSchema.table(
+  "workspaces_to_messages",
+  {
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    messageId: text("message_id")
+      .notNull()
+      .references(() => messages.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.workspaceId, t.messageId] }),
+    workspacesToMessageIdx: index("workspaces_to_messages_idx").on(t.messageId),
+  })
+);
+
+export const workspacesToMessagesRelations = relations(
+  workspacesToMessages,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workspacesToMessages.workspaceId],
+      references: [workspaces.id],
+    }),
+    message: one(messages, {
+      fields: [workspacesToMessages.messageId],
+      references: [messages.id],
+    }),
+  })
+);
+
+export const workspacesToUsers = telegramSchema.table(
+  "workspaces_to_users",
+  {
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.workspaceId, t.userId] }),
+    workspacesToUserIdx: index("workspaces_to_users_idx").on(t.userId),
+  })
+);
+
+export const workspacesToUsersRelations = relations(
+  workspacesToUsers,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workspacesToUsers.workspaceId],
+      references: [workspaces.id],
+    }),
+    user: one(users, {
+      fields: [workspacesToUsers.userId],
+      references: [users.id],
+    }),
+  })
+);
+
+export const workspacesToChats = telegramSchema.table(
+  "workspaces_to_chats",
+  {
+    workspaceId: text("workspace_id")
+      .notNull()
+      .references(() => workspaces.id, { onDelete: "cascade" }),
+    chatId: text("chat_id")
+      .notNull()
+      .references(() => chats.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.workspaceId, t.chatId] }),
+    workspacesToChatIdx: index("workspaces_to_chats_idx").on(t.chatId),
+  })
+);
+
+export const workspacesToChatsRelations = relations(
+  workspacesToChats,
+  ({ one }) => ({
+    workspace: one(workspaces, {
+      fields: [workspacesToChats.workspaceId],
+      references: [workspaces.id],
+    }),
+    chat: one(chats, {
+      fields: [workspacesToChats.chatId],
+      references: [chats.id],
+    }),
+  })
+);
 
 export const userSummary = telegramSchema
   .view("user_summary", {

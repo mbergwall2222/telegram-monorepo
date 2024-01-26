@@ -36,6 +36,20 @@
       "when": 1706067371273,
       "tag": "0005_nebulous_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1706130296753,
+      "tag": "0006_thin_sumo",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1706152037975,
+      "tag": "0007_groovy_leper_queen",
+      "breakpoints": true
     }
   ]
 }
