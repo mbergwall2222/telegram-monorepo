@@ -13,6 +13,7 @@ import {
   setUserCached,
 } from "@telegram/utils";
 import { Entity } from "@telegram/gramjs/dist/define";
+import { env } from "@telegram/env";
 
 function convertToJSON(obj: any) {
   const result: any = {};
@@ -61,8 +62,8 @@ const spacesClient = new S3Client({
   endpoint: spacesEndpoint,
   region: "us-east-1", // Change to your region
   credentials: {
-    accessKeyId: Bun.env.SPACES_ACCESS_KEY as string, // Replace with your Spaces access key
-    secretAccessKey: Bun.env.SPACES_SECRET_KEY as string, // Replace with your Spaces secret key
+    accessKeyId: env.SPACES_ACCESS_KEY,
+    secretAccessKey: env.SPACES_SECRET_KEY,
   },
 });
 

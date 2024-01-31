@@ -1,0 +1,1 @@
+ALTER TABLE "telegram"."chats" ADD COLUMN "session" text;

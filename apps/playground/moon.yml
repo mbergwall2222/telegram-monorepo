@@ -1,0 +1,11 @@
+tasks:
+  build:
+    command: "bun build --entrypoints ./src/index.ts --outdir ./dist --target node"
+    options:
+      mergeArgs: "replace"
+  serve:
+    command: "bun src/index.ts"
+    options:
+      mergeArgs: "replace"
+    deps:
+      # - ^:build

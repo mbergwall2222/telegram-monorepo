@@ -15,7 +15,8 @@
     "@telegram/redis": "workspace:*",
     "@telegram/types": "workspace:*",
     "@telegram/utils": "workspace:*",
-    "@telegram/xata": "workspace:*"
+    "@telegram/xata": "workspace:*",
+    "pusher": "^5.2.0"
   },
   "devDependencies": {
     "bun-types": "latest"

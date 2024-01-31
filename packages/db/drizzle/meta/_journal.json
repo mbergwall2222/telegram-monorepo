@@ -50,6 +50,27 @@
       "when": 1706152037975,
       "tag": "0007_groovy_leper_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1706305927584,
+      "tag": "0008_futuristic_korvac",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1706391049086,
+      "tag": "0009_slippery_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1706682259893,
+      "tag": "0010_sad_scream",
+      "breakpoints": true
     }
   ]
 }

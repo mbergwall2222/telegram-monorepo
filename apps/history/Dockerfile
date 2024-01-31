@@ -1,5 +1,6 @@
-FROM oven/bun:1 AS base
+FROM node:18-alpine
 COPY ./dist/index.js .
+COPY ./dist/package.json .
 EXPOSE 9000
 EXPOSE 9090
-CMD ["bun", "run", "index.js"]
+CMD ["node", "index.js"]

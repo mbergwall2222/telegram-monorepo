@@ -20,6 +20,8 @@ let envSchema = z.object({
   DB_CONNECTION_STRING: z.string().min(1),
   KAFKA_CONSUMER_GROUP_ID: z.string().min(1),
   QDRANT_COLLECTIONS_NAME: z.string().min(1),
+  ELASTICSEARCH_URL: z.string().min(1),
+  ELASTICSEARCH_API_KEY: z.string().min(1),
 });
 
 let _env: z.infer<typeof envSchema>;

@@ -1,0 +1,15 @@
+tasks:
+  build:
+    command: "bun build --entrypoints ./src/index.ts --outdir ./dist --target node && npm run postbuild && cp package.json dist/package.json"
+    # platform: "system"
+
+    options:
+      mergeArgs: "replace"
+    inputs:
+      - "src/**/*"
+      - "package.json"
+    outputs:
+      - "dist/**/*"
+    deps:
+      - "typecheck"
+      - "^:build"

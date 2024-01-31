@@ -3805,7 +3805,9 @@ var envSchema = z.object({
   KAFKA_DATA_TOPIC: z.string().min(1),
   DB_CONNECTION_STRING: z.string().min(1),
   KAFKA_CONSUMER_GROUP_ID: z.string().min(1),
-  QDRANT_COLLECTIONS_NAME: z.string().min(1)
+  QDRANT_COLLECTIONS_NAME: z.string().min(1),
+  ELASTICSEARCH_URL: z.string().min(1),
+  ELASTICSEARCH_API_KEY: z.string().min(1)
 });
 var _env;
 try {

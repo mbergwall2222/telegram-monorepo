@@ -5,20 +5,22 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    // "allowImportingTsExtensions": true,
+    // "noEmit": true,
     "composite": true,
     "strict": true,
-    "baseUrl": "./src",
-
     "downlevelIteration": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
+    "rootDir": "src",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
+    "outDir": "dist",
+    // "sourceRoot": "src",
     "types": [
-      "bun-types" // add Bun global
-    ]
-  }
+      "bun-types", // add Bun global
+    ],
+  },
+  "include": ["src/**/*"],
 }

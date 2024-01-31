@@ -4,5 +4,5 @@ export const logger = pino({
   // transport: {
   //   // target: "pino-pretty",
   // },
-  level: Bun.env.NODE_ENV === "production" ? "info" : "debug",
+  level: process.env.NODE_ENV === "production" ? "info" : "debug",
 });

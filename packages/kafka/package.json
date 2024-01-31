@@ -1,6 +1,7 @@
 {
   "name": "@telegram/kafka",
   "main": "src/index.ts",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "bun-types": "latest"
   },

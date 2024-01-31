@@ -1,0 +1,1 @@
+ALTER TABLE "telegram"."chats" ADD COLUMN "exported_in_full" boolean DEFAULT false NOT NULL;

@@ -1,0 +1,17 @@
+{
+  "name": "history-import",
+  "main": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@telegram/env": "workspace:*",
+    "@telegram/kafka": "workspace:*",
+    "@telegram/types": "workspace:*",
+    "bullmq": "^5.1.6"
+  }
+}

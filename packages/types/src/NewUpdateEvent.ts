@@ -41,4 +41,5 @@ export type NewUpdateEvent = {
   entities?: object | string;
   groupId?: string;
   inReplyToId?: string;
+  session?: string;
 };

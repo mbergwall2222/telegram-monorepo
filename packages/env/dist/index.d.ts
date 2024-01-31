@@ -1,0 +1,22 @@
+export declare const env: {
+    SESSION: string;
+    SPACES_ACCESS_KEY: string;
+    SPACES_SECRET_KEY: string;
+    NODE_ENV: string;
+    PUSHER_APP_ID: string;
+    PUSHER_KEY: string;
+    PUSHER_SECRET: string;
+    PUSHER_CLUSTER: string;
+    PUSHER_USE_TLS: boolean;
+    REDIS_URL: string;
+    REDIS_DB: number;
+    TELEGRAM_API_ID: number;
+    TELEGRAM_APP_HASH: string;
+    KAFKA_MESSAGES_TOPIC: string;
+    KAFKA_DATA_TOPIC: string;
+    DB_CONNECTION_STRING: string;
+    KAFKA_CONSUMER_GROUP_ID: string;
+    QDRANT_COLLECTIONS_NAME: string;
+    ELASTICSEARCH_URL: string;
+    ELASTICSEARCH_API_KEY: string;
+};

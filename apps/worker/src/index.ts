@@ -125,7 +125,7 @@ const main = async () => {
       topic,
       messages: [
         {
-          value: JSON.stringify(newUpdateEvent),
+          value: JSON.stringify({ ...newUpdateEvent, session: env.SESSION }),
           // partition: partitionNumber,
         },
       ],

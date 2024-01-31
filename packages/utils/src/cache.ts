@@ -36,10 +36,12 @@ export const _isCached = async (prefix: string, id: string) => {
 };
 
 export const isUserCached = async (id: string) => {
+  return true;
   return await _isCached("user", id);
 };
 
 export const isChatCached = async (id: string) => {
+  return true;
   return await _isCached("chat", id);
 };
 

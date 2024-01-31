@@ -59,6 +59,8 @@ export const chats = telegramSchema.table(
     description: text("description"),
     createdAt: timestamp("created_at").$defaultFn(() => new Date()),
     workspaceIds: text("workspace_ids").array().notNull().default([]),
+    exportedInFull: boolean("exported_in_full").notNull().default(false),
+    session: text("session"),
   },
   (table) => {
     return {
@@ -271,6 +273,7 @@ export const workspacesRelations = relations(workspaces, ({ many }) => ({
 export const workspacesToMessages = telegramSchema.table(
   "workspaces_to_messages",
   {
+    id: text("id").$defaultFn(() => createId()),
     workspaceId: text("workspace_id")
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
@@ -301,6 +304,7 @@ export const workspacesToMessagesRelations = relations(
 export const workspacesToUsers = telegramSchema.table(
   "workspaces_to_users",
   {
+    id: text("id").$defaultFn(() => createId()),
     workspaceId: text("workspace_id")
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
@@ -331,6 +335,7 @@ export const workspacesToUsersRelations = relations(
 export const workspacesToChats = telegramSchema.table(
   "workspaces_to_chats",
   {
+    id: text("id").$defaultFn(() => createId()),
     workspaceId: text("workspace_id")
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
