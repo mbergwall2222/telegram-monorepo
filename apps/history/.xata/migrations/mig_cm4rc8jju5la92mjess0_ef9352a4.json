@@ -1,0 +1,59 @@
+{
+  "id": "mig_cm4rc8jju5la92mjess0",
+  "parentID": "mig_cm3lrgrbg06p0tdtfjh0",
+  "checksum": "1:ef9352a4424bf5bb4acfdb23c4791944e345bb4569305e016649d89810d71589",
+  "operations": [
+    {
+      "addTable": {
+        "table": "tags"
+      }
+    },
+    {
+      "addTable": {
+        "table": "tags_to_chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "name",
+          "type": "string"
+        },
+        "table": "tags"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "description",
+          "type": "string"
+        },
+        "table": "tags"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        "table": "tags_to_chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "chat",
+          "type": "link",
+          "link": {
+            "table": "chats"
+          }
+        },
+        "table": "tags_to_chats"
+      }
+    }
+  ]
+}

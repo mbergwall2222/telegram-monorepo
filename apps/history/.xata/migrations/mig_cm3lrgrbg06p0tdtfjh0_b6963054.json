@@ -1,0 +1,25 @@
+{
+  "id": "mig_cm3lrgrbg06p0tdtfjh0",
+  "parentID": "mig_cm2vvrjbg06p0tdtfdmg",
+  "checksum": "1:b6963054764f9e1d4e71c6d8e8955ea7080dd5bb8a29a4ccc22a4475946e1347",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "description",
+          "type": "string"
+        },
+        "table": "chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "description",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    }
+  ]
+}

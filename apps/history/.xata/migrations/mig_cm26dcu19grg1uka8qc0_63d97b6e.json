@@ -1,0 +1,16 @@
+{
+  "id": "mig_cm26dcu19grg1uka8qc0",
+  "parentID": "mig_cm26b4dnp4b6fc4cj01g",
+  "checksum": "1:63d97b6efa86b842f3657a3eaac927fdd9da19bbb7ba54009959ce84921c9fe7",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "entities",
+          "type": "json"
+        },
+        "table": "messages"
+      }
+    }
+  ]
+}

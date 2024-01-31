@@ -1,0 +1,57 @@
+{
+  "id": "mig_cm8c3e244015etohljcg",
+  "parentID": "mig_cm6aqjjbg06p0tdtg8m0",
+  "checksum": "1:eaa23b13a050994e0dd8c78a337f33b246c89558b2eb793ebf1e98ee67fb8ecc",
+  "operations": [
+    {
+      "addTable": {
+        "table": "savedFilters"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "name",
+          "type": "string"
+        },
+        "table": "savedFilters"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "type",
+          "type": "string"
+        },
+        "table": "savedFilters"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "params",
+          "type": "string"
+        },
+        "table": "savedFilters"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "string"
+        },
+        "table": "savedFilters"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "orgId",
+          "type": "string"
+        },
+        "table": "savedFilters"
+      }
+    }
+  ]
+}

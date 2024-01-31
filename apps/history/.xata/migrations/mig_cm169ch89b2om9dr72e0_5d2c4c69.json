@@ -1,0 +1,16 @@
+{
+  "id": "mig_cm169ch89b2om9dr72e0",
+  "parentID": "mig_cm15gulk29uopm99a1gg",
+  "checksum": "1:5d2c4c694a6a8fad02560e2833ba539fde19442f19835db7cc532a715e27ad46",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "memberCount",
+          "type": "int"
+        },
+        "table": "chats"
+      }
+    }
+  ]
+}

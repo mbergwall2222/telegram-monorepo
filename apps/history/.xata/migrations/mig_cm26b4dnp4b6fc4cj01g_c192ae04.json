@@ -1,0 +1,25 @@
+{
+  "id": "mig_cm26b4dnp4b6fc4cj01g",
+  "parentID": "mig_cm1pltutrlfdef9rkps0",
+  "checksum": "1:c192ae0482371af6c158af04b07b3a2f2fd11843f26e11878e90e2dce92e4a48",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "groupId",
+          "type": "string"
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "inReplyToId",
+          "type": "string"
+        },
+        "table": "messages"
+      }
+    }
+  ]
+}
