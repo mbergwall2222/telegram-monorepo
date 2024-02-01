@@ -6,6 +6,9 @@ import { Api, TelegramClient, sessions, bigInt } from "@telegram/gramjs";
 import { handleMessage } from "./handleMessage";
 import { kafka } from "@telegram/kafka";
 import { Semaphore } from "async-mutex";
+import { Raw } from "@telegram/gramjs/dist/events";
+import { text } from "@clack/prompts";
+import { chats, db, keysFromObject, sql } from "@telegram/db";
 
 // const elasticClient = new Client({
 //   node: env.ELASTICSEARCH_URL,
@@ -15,206 +18,101 @@ import { Semaphore } from "async-mutex";
 //   tls: { rejectUnauthorized: false },
 // });
 
-console.log("hi");
-const session = new sessions.StoreSession("mainnew3");
-const apiId = 24600817;
-const apiHash = "78fe78114f5bc72f27769d78bb0c0574";
+const query = db
+.insert(chats)
+.values([{id: "", telegramId: "", title: "", isChannel: false, isGroup: false, exportedInFull: false, workspaceIds: []}])
+.onConflictDoUpdate({
+  target: chats.telegramId,
+  set: Object.assign(
+    {},
+    ...keysFromObject({id: "", telegramId: "", title: "", isGroup: true, lastMessageDate: new Date()})
+      .filter((k) => k !== "telegramId")
+      .map((k) => ({ [k]: sql.raw(`COALESCE(excluded."${chats[k].name}", "telegram"."chats"."${chats[k].name}")`) })),
+      {lastMessageDate: sql.raw(`GREATEST("telegram"."chats"."${chats.lastMessageDate.name}", excluded."${chats.lastMessageDate.name}")`) }
+  ) as Partial<any>,
+})
 
-const client = new TelegramClient(
-  // bigInt("4124955603282400371"),
-  session,
-  apiId,
-  apiHash,
-  {
-    connectionRetries: 5,
-  }
-);
+console.log(query.toSQL().sql)
+// console.log("hi");
+// // const session = new sessions.StoreSession("main3");
+// const session = new sessions.RedisSession("primary");
+// const apiId = 24600817;
+// const apiHash = "78fe78114f5bc72f27769d78bb0c0574";
 
-// client.setLogLevel(LogLevel.DEBUG);
-console.log("HERE");
-
-await client.start({
-  phoneNumber: async () => "+12039190591", //await input.text("Please enter your number: "),
-  password: async () => "0",
-  phoneCode: async () => "15572",
-  onError: (err) => console.log(err),
-  firstAndLastNames: async () => {
-    console.log("firstAndLastNames");
-    const ev: any = "";
-    return ev;
-  },
-  qrCode: async () => {
-    console.log("qrCode");
-    const ev: any = "";
-    return ev;
-  },
-});
-console.log("Done");
-const producer = kafka.producer();
-await producer.connect();
-console.log("Connected");
-// console.log(env);
-// const topic = env.KAFKA_MESSAGES_TOPIC.split(",")[0];
-let messageId: any;
-let messagesHandled = 0;
-while (true && messageId != -1) {
-  const messages = await client.getMessages(undefined, {
-    limit: 2000,
-    search: "ifruit",
-    waitTime: 0,
-  });
-  // console.log(messages);
-  messageId = -1;
-
-  let i = 0;
-  await Promise.all(
-    messages.map((message) =>
-      (async () => {
-        if (message.className !== "Message") return;
-        // const m = new Api.Message({
-        //   ...message
-        // })
-        sempahore.runExclusive(async () => {
-          const newUpdate = await handleMessage(client, message, {
-            ignoreMedia: false,
-          });
-          const output = await producer.send({
-            topic: "messages",
-            messages: [
-              {
-                value: JSON.stringify(newUpdate),
-                // partition: partitionNumber,
-              },
-            ],
-          });
-          console.log(`${++i} / ${messages.length}`);
-        });
-        // console.log(newUpdate);
-        // console.log(newUpdate);
-      })()
-    )
-  );
-  console.log("Done!");
-}
-
-// console.log(messages);
-// const producer = kafka.producer();
-// await producer.connect();
-
-// (async () => {
-//   await client.start({
-//     phoneNumber: async () => "+12039190591", //await input.text("Please enter your number: "),
-//     password: async () => "0",
-//     phoneCode: async () => "15572",
-//     onError: (err) => console.log(err),
-//     firstAndLastNames: async () => {
-//       console.log("firstAndLastNames");
-//       const ev: any = "";
-//       return ev;
-//     },
-//     qrCode: async () => {
-//       console.log("qrCode");
-//       const ev: any = "";
-//       return ev;
-//     },
-//   });
-
-//   // const takeout = await client.invoke(
-//   //   new Api.account.InitTakeoutSession({
-//   //     messageUsers: true,
-//   //     contacts: true,
-//   //     messageChats: true,
-//   //     messageMegagroups: true,
-//   //     messageChannels: true,
-//   //     files: true,
-//   //     fileMaxSize: bigInt(999999),
-//   //   })
-//   // );
-//   const producer = kafka.producer();
-//   await producer.connect();
-//   const topic = env.KAFKA_MESSAGES_TOPIC.split(",")[0];
-
-//   // console.log(takeout.id.toString());
-//   // return;
-//   // for await (const message of iterMessages(client, undefined, {
-//   //   search: "haku",
-//   //   // waitTime: 40,
-//   //   // limit: 2999,
-//   // })) {
-//   //   const newUpdate = await handleMessage(client, message, {
-//   //     ignoreMedia: false,
-//   //   });
-//   //   const output = await producer.send({
-//   //     topic,
-//   //     messages: [
-//   //       {
-//   //         value: JSON.stringify(newUpdate),
-//   //         // partition: partitionNumber,
-//   //       },
-//   //     ],
-//   //   });
-//   //   console.log(newUpdate);
-//   // }
-//   // const messages = await client.invoke(
-//   //   new Api.messages.SearchGlobal({
-//   //     q: "haku",
-//   //     filter: new Api.InputMessagesFilterEmpty(),
-//   //     limit: 10,
-//   //     // offsetId: 342,
-//   //     offsetPeer: new Api.InputPeerEmpty(),
-//   //   })
-//   // );
-//   // console.log(messages);
-//   // const dialogs = await client.getDialogs();
-//   // const entities = dialogs.filter((o) => o.isChannel);
-//   // const dialog = dialogs.find((o) => o?.entity?.title?.includes("AIO"));
-//   // if (!dialog) return;
-//   // let messagesCount = 0;
-//   // let messageId = 0;
-
-//   let messageId = 0;
-//   while (true) {
-//     const messages = await client.getMessages(undefined, {
-//       limit: 10,
-//       search: "haku",
-//       offsetId: messageId,
-//       waitTime: 0,
-//     });
-//     let amountLeft = messages.length;
-
-//     console.log("Handling message");
-//     await Promise.all(
-//       messages.map((message) =>
-//         (async () => {
-//           // const m = new Api.Message({
-//           //   ...message
-//           // })
-//           const newUpdate = await handleMessage(client, message, {
-//             ignoreMedia: false,
-//           });
-//           // const output = await producer.send({
-//           //   topic,
-//           //   messages: [
-//           //     {
-//           //       value: JSON.stringify(newUpdate),
-//           //       // partition: partitionNumber,
-//           //     },
-//           //   ],
-//           // });
-//           console.log(newUpdate);
-//           // console.log(newUpdate);
-//         })()
-//       )
-//     );
-//     console.log("Done!");
+// const client = new TelegramClient(
+//   // bigInt("4124955603282400371"),
+//   session,
+//   apiId,
+//   apiHash,
+//   {
+//     connectionRetries: 5,
 //   }
-//   // for await (const message of iterMessages(client, dialog.inputEntity, {
-//   //   reverse: true,
-//   // })) {
-//   //   messagesCount++;
-//   //   if (messagesCount % 100 === 0) console.log(messagesCount);
-//   // }
-// })();
+// );
+
+// // client.setLogLevel(LogLevel.DEBUG);
+// console.log("HERE");
+
+// await client.start({
+//   phoneNumber: async () => {
+//     const meaning = await text({
+//       message: "What is your phone number",
+//       // placeholder: 'Not sure',
+//       // initialValue: '42',
+//       validate(value) {
+//         if (value.length === 0) return `Value is required!`;
+//       },
+//     });
+//     return meaning as string;
+//   },
+//   password: async () => {
+//     const meaning = await text({
+//       message: "What is the password?",
+//       // placeholder: 'Not sure',
+//       // initialValue: '42',
+//       validate(value) {
+//         if (value.length === 0) return `Value is required!`;
+//       },
+//     });
+//     return meaning as string;
+//   },
+//   phoneCode: async () => {
+//     const meaning = await text({
+//       message: "What is the code?",
+//       // placeholder: 'Not sure',
+//       // initialValue: '42',
+//       validate(value) {
+//         if (value.length === 0) return `Value is required!`;
+//       },
+//     });
+//     return meaning as string;
+//   },
+//   onError: (err) => console.log(err),
+//   firstAndLastNames: async () => {
+//     console.log("firstAndLastNames");
+//     const ev: any = "";
+//     return ev;
+//   },
+//   qrCode: async () => {
+//     console.log("qrCode");
+//     const ev: any = "";
+//     return ev;
+//   },
+// });
+// console.log("Done");
+
+// const dialogs = await client.invoke(new Api.messages.GetDialogFilters());
+
+// // @ts-ignore
+// console.log(dialogs.find((o) => o?.id == 115).includePeers[3]);
+// const chat = dialogs.find((o) =>
+//   o.entity?.title?.toString()?.includes("Refunding Class by")
+// );
+// if (!chat) {
+//   console.log("Chat Not found");
+// } else {
+//   const messages = await client.getMessages(chat?.inputEntity, { limit: 1 });
+//   console.log(messages);
+// }
 
 // const renameKeys = async () => {
 //   console.log(await redis.info());

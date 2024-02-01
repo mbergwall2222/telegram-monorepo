@@ -7,30 +7,21 @@ const { BullAdapter } = require("@bull-board/api/bullAdapter");
 const { BullMQAdapter } = require("@bull-board/api/bullMQAdapter");
 const { ExpressAdapter } = require("@bull-board/express");
 
-const queue = new Queue("{history-messages}", {
+const queueNames = ["{history-messages}", "{history-results}", "{history-queue}", "{history-messages-2}", "{history-results-2}", "{history-queue-2}"];
+
+const queues = queueNames.map(queueName => new Queue(queueName, {
   connection: {
     host: env.REDIS_URL.split(":")[1].replace("//", ""),
   },
-});
-const queue2 = new Queue("{history-results}", {
-  connection: {
-    host: env.REDIS_URL.split(":")[1].replace("//", ""),
-  },
-});
-const queue3 = new Queue("{history-queue}", {
-  connection: {
-    host: env.REDIS_URL.split(":")[1].replace("//", ""),
-  },
-});
+}))
+
+
+
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/admin/queues");
 
 const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
-  queues: [
-    new BullMQAdapter(queue),
-    new BullMQAdapter(queue2),
-    new BullMQAdapter(queue3),
-  ],
+  queues: queues.map(queue => new BullMQAdapter(queue)),
   serverAdapter: serverAdapter,
 });
 

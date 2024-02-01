@@ -72,7 +72,8 @@ let chatSet = new Map<string, Entity>();
 export const handleMessage = async (
   client: TelegramClient,
   message: Api.Message,
-  { ignoreMedia = false, ignorePfp = false }
+  { ignoreMedia = false, ignorePfp = false },
+  onProgress?: (progress: number) => Promise<void>
 ) => {
   const log = logger.child({
     messageId: message.id.toString(),
@@ -355,23 +356,36 @@ export const handleMessage = async (
         if (!fileNameAttr) fileName = `${fromId}/${uuid("doc")}.${extension}`;
         else fileName = `${fromId}/${uuid("doc")}-${fileNameAttr.fileName}`;
 
-        const buffer = await message.downloadMedia();
+        let tooLarge = false;
+        if (document.size.geq(bigInt(52428800))) {
+          tooLarge = true;
+        } else {
+          const buffer = await message.downloadMedia({
+            progressCallback: (progress1, progress2) => {
+              if (onProgress) {
+                console.log(progress1.toJSNumber(), progress2.toJSNumber());
+                onProgress(progress1.toJSNumber() / progress2.toJSNumber());
+              }
+            },
+          });
 
-        const command = new PutObjectCommand({
-          Bucket: "telegram-media", // Replace with your Space name
-          Key: fileName,
-          Body: buffer,
-          ACL: "public-read",
-        });
+          const command = new PutObjectCommand({
+            Bucket: "telegram-media", // Replace with your Space name
+            Key: fileName,
+            Body: buffer,
+            ACL: "public-read",
+          });
 
-        const data = await spacesClient.send(command);
+          const data = await spacesClient.send(command);
+        }
+
         // console.log(command);
         media = {
           fileId,
           fileName,
           fileSize: document.size.toJSNumber(),
           mimeType: document.mimeType,
-          fileUrl: `${cdnEndpoint}${fileName}`,
+          fileUrl: tooLarge ? "OVERFLOW" : `${cdnEndpoint}${fileName}`,
         };
         log.debug({ fileName }, `Successfully uploaded document`);
 

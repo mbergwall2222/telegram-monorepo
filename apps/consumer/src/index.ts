@@ -113,7 +113,7 @@ const run = async () => {
                 {},
                 ...keysFromObject(usersRaw[0])
                   .filter((k) => k !== "userId")
-                  .map((k) => ({ [k]: sql.raw(`excluded.${users[k].name}`) }))
+                  .map((k) => ({ [k]: sql.raw(`COALESCE(excluded.${users[k].name}, "users".${users[k].name})`) })),
               ) as Partial<any>,
             })
             .returning()
@@ -149,7 +149,8 @@ const run = async () => {
                 {},
                 ...keysFromObject(chatsRaw[0])
                   .filter((k) => k !== "telegramId")
-                  .map((k) => ({ [k]: sql.raw(`excluded.${chats[k].name}`) }))
+                  .map((k) => ({ [k]: sql.raw(`COALESCE(excluded.${chats[k].name}, "chats".${chats[k].name})`) })),
+                  {lastMessageDate: sql.raw(`GREATEST("telegram"."chats"."${chats.lastMessageDate.name}", excluded."${chats.lastMessageDate.name}")`) }
               ) as Partial<any>,
             })
             .returning()

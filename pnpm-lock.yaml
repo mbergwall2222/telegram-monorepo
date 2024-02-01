@@ -375,6 +375,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.478.0
         version: 3.478.0
+      '@clack/prompts':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@elastic/elasticsearch':
         specifier: ^8.11.0
         version: 8.11.0

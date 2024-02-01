@@ -11,6 +11,7 @@ const sessionToQueuePrefix: Record<string, string> = {
   "history-1": "",
   "history-2": "-2",
   "history-3": "-2",
+  primary: "-2",
 };
 
 const sessionToWorkerSession: Record<string, string> = {
@@ -18,36 +19,44 @@ const sessionToWorkerSession: Record<string, string> = {
   "history-1": "worker-0",
   "history-2": "worker-1",
   "history-3": "worker-1",
+  primary: "primary",
 };
 
-const resultsQueue = new Queue(
-  `{history-results${sessionToQueuePrefix[env.SESSION]}}`,
-  {
-    connection: {
-      host: env.REDIS_URL.split(":")[1].replace("//", ""),
+const resultsQueue = new Queue(`{history-results}`, {
+  connection: {
+    host: env.REDIS_URL.split(":")[1].replace("//", ""),
+  },
+  defaultJobOptions: {
+    attempts: 5,
+    backoff: {
+      type: "exponential",
+      delay: 1000,
     },
-    defaultJobOptions: {
-      attempts: 5,
-      backoff: {
-        type: "exponential",
-        delay: 1000,
-      },
-      removeOnComplete: true,
-    },
-  }
-);
+    removeOnComplete: true,
+  },
+});
 
 export const worker = (client: TakeoutClient) => {
   const w = new Worker(
     `{history-messages${sessionToQueuePrefix[env.SESSION]}}`,
     async (job) => {
-      if (!client.connected) await client.connect();
+      if (!client.connected) {
+        console.log("Reconnecting...");
+        await client.connect();
+      }
       const data = job.data as Serialized<Api.Message>;
       const message = await convertToMessage(data, client);
-      const newUpdateEvent = await handleMessage(client, message, {
-        ignoreMedia: false,
-        ignorePfp: false,
-      });
+      const newUpdateEvent = await handleMessage(
+        client,
+        message,
+        {
+          ignoreMedia: false,
+          ignorePfp: false,
+        },
+        async (percent) => {
+          await job.updateProgress(Math.floor(percent * 100));
+        }
+      );
 
       if (typeof newUpdateEvent == "object") {
         await resultsQueue.add(newUpdateEvent.id, {

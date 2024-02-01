@@ -41,6 +41,7 @@ const sessionToQueuePrefix: Record<string, string> = {
   "history-1": "",
   "history-2": "-2",
   "history-3": "-2",
+  primary: "-2",
 };
 
 // const session = new MemorySession();
@@ -96,7 +97,10 @@ export function convertToJSON(obj: any) {
   return result;
 }
 
-export const main = async (client: TakeoutClient) => {
+export const main = async (
+  client: TakeoutClient,
+  takeoutSession: string | null = null
+) => {
   logger.debug("Starting Telegram Client");
 
   // const takeout = await client.invoke(
@@ -107,7 +111,7 @@ export const main = async (client: TakeoutClient) => {
   //     messageMegagroups: true,
   //     messageChannels: true,
   //     files: true,
-  //     fileMaxSize: bigInt(999999),
+  //     fileMaxSize: bigInt(9999999999),
   //   })
   // );
 
@@ -119,19 +123,48 @@ export const main = async (client: TakeoutClient) => {
   // for(const dialog of dialogs) {
   //  semaphore.runExclusive(async () => {
   //   const message = await client.getMessages(dialog.inputEntity, { limit: 1 });
+
+  //   if(!message?.[0]?.id) {
+  //     console.log(dialog.entity);
+  //     return;
+  //   };
   //   const update = await handleMessage(client, message[0], {
   //     ignoreMedia: false,
   //     ignorePfp: false,
   //   });
-  //   await queue.add("update", {...update as any, session: "worker-0"});
+  //   console.log("Got Update")
+  //   await queue.add("update", {...update as any, session: "worker-1"});
   //  })
   // }
+  // console.log("done");
+  // return;
 
   logger.debug("Telegram Client Started");
 
   const worker = new Worker(
     `{history-queue${sessionToQueuePrefix[env.SESSION]}}`,
     async (job) => {
+      if (takeoutSession) {
+        console.log("Starting new takeout client");
+        const takeout = await client.passthroughInvoke(
+          new Api.account.InitTakeoutSession({
+            contacts: true,
+            messageUsers: true,
+            messageChats: true,
+            messageMegagroups: true,
+            messageChannels: true,
+            files: true,
+            fileMaxSize: bigInt(9999999999),
+          })
+        );
+
+        client.setTakeoutId(takeout.id);
+        client.startTakeout();
+        await redis.set(
+          `session:${env.SESSION}:takeout`,
+          takeout.id.toString()
+        );
+      }
       if (!client.connected) await client.connect();
       const data = job.data as { chatId: string };
       const dialogs = await client.getDialogs();
@@ -163,9 +196,14 @@ export const main = async (client: TakeoutClient) => {
       let totalMessagesInChatStr = await get("totalMessages");
       let totalMessagesInChat: number;
       if (!totalMessagesInChatStr) {
-        totalMessagesInChat =
-          (await client.getMessages(chat?.inputEntity, { limit: 1 }))[0].id ??
-          0;
+        const messages = await client.getMessages(chat?.inputEntity, {
+          limit: 1,
+        });
+        if (!messages.length) {
+          throw new Error("No messages found in chat");
+        } else {
+          totalMessagesInChat = messages.total ?? -1;
+        }
       } else {
         totalMessagesInChat = parseInt(totalMessagesInChatStr);
       }
@@ -217,8 +255,8 @@ export const main = async (client: TakeoutClient) => {
         messages.push({ message, id: currentJob });
 
         if (messages.length > 500) {
+          await set("currentMessageId", Math.max(...messages.map((o) => o.message.id)));
           await handleMessages();
-          await set("currentMessageId", Math.max(...messages.map((o) => o.id)));
           bar1.update(totalJobs);
           await set("totalMessagesDone", totalJobs);
           await job.updateProgress(

@@ -1,6 +1,6 @@
 import { env } from "@telegram/env";
 
-import { TelegramClient, sessions, events, utils } from "@telegram/gramjs";
+import { TelegramClient, sessions, events, utils, Api } from "@telegram/gramjs";
 import { text } from "@clack/prompts";
 
 //@ts-ignore
@@ -15,8 +15,8 @@ import { ConfigurationInput, Lightship, createLightship } from "lightship";
 import { redis } from "@telegram/redis";
 const { StoreSession, StringSession, MemorySession, RedisSession } = sessions;
 
-let sessionName = "staging";
-
+let sessionName = "history-1";
+let takeout = false;
 const apiId = env.TELEGRAM_API_ID;
 const apiHash = env.TELEGRAM_APP_HASH;
 // const session = new StoreSession(Bun.env.SESSION as string);
@@ -87,6 +87,21 @@ const main = async () => {
   );
   await redis.set(`session:${sessionName}:port`, session.port);
 
+  if (takeout) {
+    const takeout = await client.invoke(
+      new Api.account.InitTakeoutSession({
+        contacts: true,
+        messageUsers: true,
+        messageChats: true,
+        messageMegagroups: true,
+        messageChannels: true,
+        files: true,
+        fileMaxSize: bigInt(9999999999),
+      })
+    );
+
+    await redis.set(`session:${sessionName}:takeout`, takeout.id.toString());
+  }
   console.log("session saved");
 };
 
