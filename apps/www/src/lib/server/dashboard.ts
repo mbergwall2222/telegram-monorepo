@@ -196,12 +196,12 @@ export const getDashboardMessages = async () => {
     now
   );
 
-  const monthlyCountsThisYear = elasticData.aggregations.monthly.buckets.map(
-    (o) => ({
+  const monthlyCountsThisYear = elasticData.aggregations.monthly.buckets
+    .map((o) => ({
       count: o.doc_count,
       day: o.key_as_string as string,
-    })
-  );
+    }))
+    .slice(-12);
 
   return {
     totalAllTime,
