@@ -1,0 +1,14 @@
+tasks:
+  typecheck:
+    command: "echo 'typecheck'"
+  build:
+    command: "./prepare_dist.sh"
+    platform: "system"
+    inputs:
+      - "gramjs/**/*"
+    outputs:
+      - "dist/**/*"
+    options:
+      mergeInputs: "replace"
+      mergeOutputs: "replace"
+

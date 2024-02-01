@@ -1,0 +1,269 @@
+{
+  "tables": [
+    {
+      "name": "messageEntities",
+      "columns": [
+        {
+          "name": "entity",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "datetime"
+        },
+        {
+          "name": "messageId",
+          "type": "string"
+        },
+        {
+          "name": "chatId",
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "savedFilters",
+      "columns": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "params",
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "orgId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "messages",
+      "columns": [
+        {
+          "name": "date",
+          "type": "datetime"
+        },
+        {
+          "name": "messageId",
+          "type": "string"
+        },
+        {
+          "name": "messageText",
+          "type": "text"
+        },
+        {
+          "name": "fromUser",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        {
+          "name": "toChat",
+          "type": "link",
+          "link": {
+            "table": "chats"
+          }
+        },
+        {
+          "name": "media",
+          "type": "link",
+          "link": {
+            "table": "documents"
+          }
+        },
+        {
+          "name": "groupId",
+          "type": "string"
+        },
+        {
+          "name": "inReplyToId",
+          "type": "string"
+        },
+        {
+          "name": "entities",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "firstName",
+          "type": "string"
+        },
+        {
+          "name": "lastName",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "name": "pfpUrl",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "chats",
+      "columns": [
+        {
+          "name": "isGroup",
+          "type": "bool"
+        },
+        {
+          "name": "isChannel",
+          "type": "bool"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "memberCount",
+          "type": "int"
+        },
+        {
+          "name": "pfpUrl",
+          "type": "string"
+        },
+        {
+          "name": "lastMessageDate",
+          "type": "datetime"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "documents",
+      "columns": [
+        {
+          "name": "fileId",
+          "type": "string"
+        },
+        {
+          "name": "fileName",
+          "type": "string"
+        },
+        {
+          "name": "fileSize",
+          "type": "int"
+        },
+        {
+          "name": "mimeType",
+          "type": "string"
+        },
+        {
+          "name": "fileUrl",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "tags",
+      "columns": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "type": "string"
+        },
+        {
+          "name": "order",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "name": "tags_to_chats",
+      "columns": [
+        {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        {
+          "name": "chat",
+          "type": "link",
+          "link": {
+            "table": "chats"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tags_to_users",
+      "columns": [
+        {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tags_to_messages",
+      "columns": [
+        {
+          "name": "tag",
+          "type": "link",
+          "link": {
+            "table": "tags"
+          }
+        },
+        {
+          "name": "message",
+          "type": "link",
+          "link": {
+            "table": "messages"
+          }
+        }
+      ]
+    }
+  ]
+}

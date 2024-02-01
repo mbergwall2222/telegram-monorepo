@@ -1,0 +1,13 @@
+tasks:
+  typecheck:
+    command: "echo 'typecheck'"
+    outputs:
+  build:
+    command: "echo 'build'"
+    options:
+      mergeArgs: 'replace'
+      mergeDeps: 'replace'
+      mergeInputs: 'replace'
+      mergeOutputs: 'replace'
+    outputs:
+      - '.'

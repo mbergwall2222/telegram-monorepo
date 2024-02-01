@@ -1,0 +1,131 @@
+{
+  "id": "mig_cm15gulk29uopm99a1gg",
+  "parentID": "mig_cm1331989b2om9dr71n0",
+  "checksum": "1:5419f06897714b6d78dac9a144fcd9c684adcda591f7c558bf29b7b11572482e",
+  "operations": [
+    {
+      "addTable": {
+        "table": "users"
+      }
+    },
+    {
+      "addTable": {
+        "table": "chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "date",
+          "type": "datetime"
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "messageId",
+          "type": "string"
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "messageText",
+          "type": "text"
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fromUser",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "toChat",
+          "type": "link",
+          "link": {
+            "table": "chats"
+          }
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "firstName",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "lastName",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "username",
+          "type": "string"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "isGroup",
+          "type": "bool"
+        },
+        "table": "chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "isChannel",
+          "type": "bool"
+        },
+        "table": "chats"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "title",
+          "type": "string"
+        },
+        "table": "chats"
+      }
+    }
+  ]
+}

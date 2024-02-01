@@ -1,0 +1,69 @@
+{
+  "id": "mig_cm1meeutrlfdef9rkoag",
+  "parentID": "mig_cm169ch89b2om9dr72e0",
+  "checksum": "1:cc26e44c83328387f22de96c76fccda0a47238c554037245650a4ace07dc8aa9",
+  "operations": [
+    {
+      "addTable": {
+        "table": "documents"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "media",
+          "type": "link",
+          "link": {
+            "table": "documents"
+          }
+        },
+        "table": "messages"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fileId",
+          "type": "string"
+        },
+        "table": "documents"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fileName",
+          "type": "string"
+        },
+        "table": "documents"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fileSize",
+          "type": "int"
+        },
+        "table": "documents"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "mimeType",
+          "type": "string"
+        },
+        "table": "documents"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fileUrl",
+          "type": "string"
+        },
+        "table": "documents"
+      }
+    }
+  ]
+}

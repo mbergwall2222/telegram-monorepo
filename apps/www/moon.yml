@@ -1,0 +1,47 @@
+tasks:
+  proxy:
+    command:
+      - "npx local-ssl-proxy"
+      - "--key dev.mattbergwall.com-key.pem"
+      - "--cert dev.mattbergwall.com.pem"
+      - "--source 443"
+      - "--target 3000"
+    platform: "system"
+  serve:
+    command: "doppler run -- pnpm run dev"
+    platform: "system"
+    options:
+      mergeArgs: "replace"
+      mergeDeps: "replace"
+      runFromWorkspaceRoot: false
+  build:
+    command:
+      - "doppler run --command='rm -rf ./.next && NODE_ENV=production bun run build && cp -r .next/static .next/standalone/apps/www/.next/ && cp -r public .next/standalone/apps/www'"
+    platform: "system"
+    outputs:
+      - ".next/**/*"
+    inputs:
+      - "src/**/*"
+    options:
+      mergeArgs: "replace"
+      mergeDeps: "replace"
+      runFromWorkspaceRoot: false
+  docker-build:
+    command: "sh -c 'docker build -t ghcr.io/mbergwall2222/telegram-$project:latest -t ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD) .'"
+    inputs:
+      - "src/**/*"
+      - "Dockerfile"
+    deps:
+      - "build"
+    options:
+      mergeArgs: "replace"
+      mergeDeps: "replace"
+      runFromWorkspaceRoot: false
+
+  docker-push:
+    command: "sh -c 'docker push ghcr.io/mbergwall2222/telegram-$project:latest && docker push ghcr.io/mbergwall2222/telegram-$project:$(git rev-parse --short=8 HEAD)'"
+    deps:
+      - "docker-build"
+  deploy:
+    deps:
+      - "docker-push"
